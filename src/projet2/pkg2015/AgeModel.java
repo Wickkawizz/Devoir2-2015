@@ -16,6 +16,7 @@
 package pedigree;
 
 
+import Model.Sim;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -137,7 +138,7 @@ public class AgeModel
     /**
      * A random value with the specified lifespan distribution.
      * 
-     * @param RND Psudorandom number generator for uniform[0,1]
+     * @param RND Pseudo random number generator for uniform[0,1]
      * 
      * @return a random value distributed by Gomperz-Makeham
      */
@@ -152,11 +153,21 @@ public class AgeModel
         return Math.min(age_death, accidental_death);
     }
     
+    //Generates a random sex for the Sim
+    public Sim.Sex getRandomSex(){
+        if(Math.random()>=0.50){
+            return Sim.Sex.F;
+        }else{
+            return Sim.Sex.M;
+        }
+    }
+    
     /**
      * Test for tabulating random lifespans from command line.
      * 
      * @param args accident-rate death-rate [scale]
      */
+    //No idea why there's a main here. It says it's for testing from the cmd.
     public static void main(String[] args)
     {
         int arg_idx = 0;

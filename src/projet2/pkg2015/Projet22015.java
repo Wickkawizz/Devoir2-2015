@@ -5,6 +5,11 @@
  */
 package projet2.pkg2015;
 
+import BLL.Simulator;
+import Model.Event;
+import Model.PQ;
+import Model.Sim;
+
 /**
  *
  * @author WickkaWizz
@@ -15,7 +20,7 @@ public class Projet22015 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        Simulator simulation = new Simulator();
+        simulation.simulate(0,0);
     }
-    
 }
