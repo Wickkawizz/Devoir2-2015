@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pedigree;
+package Model;
 
 /**
  *
@@ -27,6 +27,7 @@ public class Sim implements Comparable<Sim>
     public static double MIN_MATING_AGE_M = 16.0;
     public static double MAX_MATING_AGE_F = 50.0; // Janet Jackson
     public static double MAX_MATING_AGE_M = 73.0; // Charlie Chaplin
+
     
     /** 
      * Ordering by death date.
@@ -101,7 +102,7 @@ public class Sim implements Comparable<Sim>
     public boolean isInARelationship(double time)
     {
         return mate != null && mate.getDeathTime()>time 
-                && mate.getMate()==this;
+                && mate.getMate()==this.mate;
     }
     
     public void setDeath(double death)
