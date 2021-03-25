@@ -43,9 +43,9 @@ public class Simulator {
                   
        eventQ.insert(E); // insertion dans la file de priorité
     }
-    while (!eventQ.isEmpty())
+    while (!eventQ.isEmptyEvent(eventQ.getEventList()))
     {
-       Event E = eventQ.deleteMin(); // prochain événement
+       Event E = eventQ.deleteMinEvent(); // prochain événement
        if (E.getTime() > Tmax) break; // arrêter à Tmax
        if (E.getSubject().getDeathTime() > E.getTime())
        {
@@ -60,7 +60,7 @@ public class Simulator {
                   eventQ.insert(new Event(sim, time + sim.getDeathTime(), Event.EventType.Mort)); // On enfile l'evenement de mort dans la timeline
                   break;
               case Accouplement:
-                  if (sim.isMatingAge(E.getTime())) {
+                  if (E.getSubject().isMatingAge(E.getTime())) {
                       //verify if sim has mate or not
                       //verify infidelity
                       //choose partner for reproduction accordingly
@@ -68,7 +68,7 @@ public class Simulator {
                   }
                   break;
               case Mort:
-                  simQ.removeSim(sim);
+                  simQ.removeSim(E.getSubject());
                   break;
           }
        } // else rien à faire avec E car son sujet est mort
