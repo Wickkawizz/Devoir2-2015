@@ -6,7 +6,7 @@
 package Model;
 
 /**
- *
+ * @author Arkapin£
  * @author WickkaWizz
  */
 public class Event implements Comparable<Event>{
@@ -15,12 +15,22 @@ public class Event implements Comparable<Event>{
     // might change place to somewhere that generates the events instead of here
     public enum EventType {Naissance, Mort, Accouplement};
     
-    Sim subject; //List de sujets? Car pour les naissances, nous avons besoin des parents. (I.E. List[0] = sim, List[1] = pere, List[2] = mere. Seulement utiliser dans ce cas ci)
+    Sim subject;
+    Sim mom;
+    Sim dad;
     Double time;
     EventType event;
 
     public Event(Sim subject, Double time, EventType event) {
         this.subject = subject;
+        this.time = time;
+        this.event = event;
+    }
+
+    public Event(Sim subject, Sim mom, Sim dad, Double time, EventType event) {
+        this.subject = subject;
+        this.mom = mom;
+        this.dad = dad;
         this.time = time;
         this.event = event;
     }
@@ -36,6 +46,22 @@ public class Event implements Comparable<Event>{
 
     public void setSubject(Sim subject) {
         this.subject = subject;
+    }
+    
+    public Sim getMom() {
+    	return mom;
+    }
+    
+    public void setMom(Sim mom) {
+    	this.mom = mom;
+    }
+    
+    public Sim getDad() {
+    	return dad;
+    }
+    
+    public void setDad(Sim dad) {
+    	this.dad = dad;
     }
 
     public Double getTime() {

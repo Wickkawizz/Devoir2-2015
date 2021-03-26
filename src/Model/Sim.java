@@ -16,7 +16,7 @@
 package Model;
 
 /**
- *
+ * @author Arkapin£
  * @author Mikl&oacute;s Cs&#369;r&ouml;s
  */
 public class Sim implements Comparable<Sim>
@@ -52,7 +52,8 @@ public class Sim implements Comparable<Sim>
     
     private Sex sex;
     
-    protected Sim(Sim mother, Sim father, double birth, Sex sex)
+    // not sure why protected doesn't work here
+    public Sim(Sim mother, Sim father, double birth, Sex sex)
     {
         this.mother = mother;
         this.father = father;
@@ -105,6 +106,8 @@ public class Sim implements Comparable<Sim>
                 && mate.getMate()==this.mate;
     }
     
+    
+    // same as setDeathTime?
     public void setDeath(double death)
     {
         this.deathtime = death;
@@ -125,6 +128,8 @@ public class Sim implements Comparable<Sim>
         return deathtime;
     }
     
+
+    // same as setDeath?
     public void setDeathTime(double death_time)
     {
         this.deathtime = death_time;

@@ -6,12 +6,9 @@
 package projet2.pkg2015;
 
 import BLL.Simulator;
-import Model.Event;
-import Model.PQ;
-import Model.Sim;
 
 /**
- *
+ * @author Arkapin£
  * @author WickkaWizz
  */
 public class Projet22015 {
@@ -21,6 +18,6 @@ public class Projet22015 {
      */
     public static void main(String[] args) {
         Simulator simulation = new Simulator();
-        simulation.simulate(0,0);
+        simulation.simulate(10,10);
     }
 }

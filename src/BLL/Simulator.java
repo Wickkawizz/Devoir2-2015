@@ -1,30 +1,28 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package BLL;
 
 import Model.Event;
 import Model.PQ;
 import Model.Sim;
+
+//import java.util.ArrayList;
 import java.util.Random;
-import pedigree.AgeModel;
+import projet2.pkg2015.AgeModel;
 
 /**
- *
+ * @author Arkapin£
  * @author WickkaWizz
  */
 // this is the class that will run the simulation. Called by main
 public class Simulator {
-    Double time = 0.00;
+    //private ArrayList<Sim> arrayList;
+	Double time = 0.00;
     AgeModel ageModel;
 
     public Simulator() {
         ageModel = new AgeModel();
     }
     
-    //Teachers implementation of the run. Will have to implement functionalities accordingly. Gives a good idea of how the appe should function
+    //Teachers implementation of the run. Will have to implement functionalities accordingly. Gives a good idea of how the app should function
     public void simulate(int n, double Tmax){
     PQ eventQ = new PQ(); // file de priorité d'événements
     PQ simQ = new PQ(); // file de priorité de sims
@@ -49,22 +47,42 @@ public class Simulator {
        if (E.getTime() > Tmax) break; // arrêter à Tmax
        if (E.getSubject().getDeathTime() > E.getTime())
        {
+    	  Sim sim;
           switch(E.getEvent()){
               case Naissance:
-                  Sim sim = new Sim(mother, father, E.getTime(), ageModel.getRandomSex());
+            	  // How to get/choose mother/father??
+                  sim = new Sim(E.getMom(), E.getDad(), E.getTime(), ageModel.getRandomSex());
                   sim.setDeathTime(ageModel.randomAge(new Random()));
                   if (sim.getSex() == Sim.Sex.F) {
                       eventQ.insert(new Event(sim, E.getTime() + ageModel.randomAge(new Random()), Event.EventType.Accouplement));
                   }
                   
                   eventQ.insert(new Event(sim, time + sim.getDeathTime(), Event.EventType.Mort)); // On enfile l'evenement de mort dans la timeline
+                  
+                  // add new sim to simQ ?
+                  simQ.getSimList().add(sim);
                   break;
               case Accouplement:
-                  if (E.getSubject().isMatingAge(E.getTime())) {
-                      //verify if sim has mate or not
-                      //verify infidelity
+            	  sim = E.getSubject();
+                  if (sim.isMatingAge(E.getTime())) {
+                	  Sim mate = sim.getMate();
+                	  //verify if sim has mate or not
+                	  if(mate != null) {
+                		  //verify infidelity
+                	  } else {
+                		  //register x and y as mates for the future
+                		  
+                		  // no current mate --> find mate
+                		  sim.getSex();
+                		  for (Sim potentialMate : simQ.getSimList()) {
+                			  if(potentialMate.isInARelationship(E.getTime())) {
+                				  
+                			  }
+                		  }
+                		  
+                		  
+                	  }
                       //choose partner for reproduction accordingly
-                      //register x and y as mates for the future
                   }
                   break;
               case Mort:
