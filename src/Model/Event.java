@@ -28,7 +28,7 @@ public class Event implements Comparable<Event>{
     }
 
     public Event(Sim subject, Sim mom, Sim dad, Double time, EventType event) {
-        this.subject = subject;
+        this.subject = null;
         this.mom = mom;
         this.dad = dad;
         this.time = time;

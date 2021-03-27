@@ -48,8 +48,8 @@ public class PQ{
 	        simList.add(i, simList.get((int) p)/*-1 ?? maybe the indexation will be bad*/);
 	        i = (int) p;
 	        
-	        // mais on veut pas le plafond, on le floor non?
-	        p = i/2;// + ((i % 2 == 0) ? 0:1); //C'est le plafond de i/2: https://stackoverflow.com/questions/7139382/java-rounding-up-to-an-int-using-math-ceil
+	        // mais on veut pas le plafond, on le floor non? En effet, you're right.
+	        p = Math.floor(i/2);
 	        }
 	    simList.add(i,v);
     }
@@ -61,9 +61,7 @@ public class PQ{
 	    while (p !=0 && eventList.get((int) p).compareTo(v) > 0){
 	        eventList.add(i, eventList.get((int) p)/*-1 ?? maybe the indexation will be bad*/);
 	        i = (int) p;
-
-	        // mais on veut pas le plafond, on le floor non?
-	        p = i/2;// + ((i % 2 == 0) ? 0:1); //C'est le plafond de i/2: https://stackoverflow.com/questions/7139382/java-rounding-up-to-an-int-using-math-ceil
+	        p = Math.floor(i/2);
 	        }
 	    eventList.add(i,v);
     }
