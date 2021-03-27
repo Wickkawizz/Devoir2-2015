@@ -82,13 +82,14 @@ public class PQ{
     public void sink(Event v, int i){ if(i <= 0)System.exit(-1);
 	    int c = MinChildEvent(i, eventList);
 	    // -1 is returned if the sim in the list is lesser than the one given in argument
-	    
-	    // this always outputs c = 2 ??
-	    System.out.println("\n---\nc : " + c + "\n---");
+
 	    while(c != 0 && eventList.get(c).compareTo(v) < 0){
 	        eventList.add(i, eventList.get(c)/*-1 ?? maybe the indexation will be bad*/);
 	        i = c;
 	        c = MinChildEvent(i, eventList);
+
+		    System.out.println("\n---\nc : " + c + "\n---");
+		    System.out.println("\n---\neventList.size() : " + eventList.size() + "\n---");
 	        }
 	    eventList.add(i, v);
     }
@@ -127,6 +128,9 @@ public class PQ{
 		 * Va falloir tester plus en detail, mais je pense que l'algo du prof start sont array a '1' et non '0'
 		 * "Entrée: indice i > 0, taille n" (taken from pseudo-code)
 		 * */
+		if (2 * i + 1 </*=*/ list.size())
+			System.out.println(list.size() - (2*i+1) + " (index)");
+		
 		if (2 * i > list.size()) {
 			j = 0;
 		} else if ((2 * i + 1 </*=*/ list.size()) && (list.get(2 * i + 1).compareTo(list.get(2 * i)) < 0)) {
@@ -134,6 +138,8 @@ public class PQ{
 		} else {
 			j = 2 * i;
 		}
+		
+		System.out.println("list.size() = " + list.size() + "\nj = " + j);
 		return j;
 	}
     
@@ -158,11 +164,11 @@ public class PQ{
     public Event deleteMinEvent() {
         int n = eventList.size();
         Event r = eventList.get(0);
-        Event v = eventList.get(eventList.size() - 1);
-        eventList.set(eventList.size() - 1, null);
+        Event v = eventList.get(n - 1);
+        eventList.set(n - 1, null);
         n = n - 1;
-        if (n > 0) {
-            sink(v,1);
+        if (n >= 0) {
+            sink(v,0);
         }
         return r;
     }
