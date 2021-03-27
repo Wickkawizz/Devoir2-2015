@@ -126,12 +126,12 @@ public class Simulator {
 					eventQ.insert(new Event(sim, (E.getTime() + AgeModel.randomWaitingTime(new Random(), AgeModel.reproduction_rate)),
 							Event.EventType.Accouplement));
 					break;
-				}
+					}
                                 case Mort: //aka Deaderinoo Ripperoni
 					eventQ.removeSim(E.getSubject());
 					break;
-			} // else rien à faire avec E car son sujet est mort
+				} // else rien à faire avec E car son sujet est mort
+			}
 		}
 	}
-}
 }
