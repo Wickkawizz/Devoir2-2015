@@ -81,9 +81,12 @@ public class PQ{
 	    simList.add(i, v);
     }
     
-    public void sink(Event v, int i){
+    public void sink(Event v, int i){ if(i <= 0)System.exit(-1);
 	    int c = MinChildEvent(i, eventList);
 	    // -1 is returned if the sim in the list is lesser than the one given in argument
+	    
+	    // this always outputs c = 2 ??
+	    System.out.println("\n---\nc : " + c + "\n---");
 	    while(c != 0 && eventList.get(c).compareTo(v) < 0){
 	        eventList.add(i, eventList.get(c)/*-1 ?? maybe the indexation will be bad*/);
 	        i = c;
@@ -105,26 +108,44 @@ public class PQ{
 		return j;
 	}
     
+	// issue is raised here*** --> (list.get(2 * i + 1) returns null for some reason
 	public int MinChildEvent(int i, ArrayList<Event> list) {
+
 		int j;
+		System.out.println("\n\n---------------------------------");
+		System.out.println("i : " + i);
+		System.out.println("2i : " + 2 * i);
+		System.out.println("list.size() : " + list.size());
+		System.out.println("2i + 1 </*=*/ list.size() : " + (2 * i + 1 </*=*/ list.size()));
+		//System.out.println("j : " + j);
+		System.out.println("---------------------------------");
+		
+		/* "2 * i + 1 <= list.size()" retourne vrai mais list.get(2 * i + 1) retourne null??
+		 * ca fait pas de sens? */
+		
+		
+		/*
+		 * **Avec le '<=' qui devient un '<' la condition fonctionne comme voulue je pense**
+		 * Va falloir tester plus en detail, mais je pense que l'algo du prof start sont array a '1' et non '0'
+		 * "Entrée: indice i > 0, taille n" (taken from pseudo-code)
+		 * */
 		if (2 * i > list.size()) {
 			j = 0;
-		} else if ((2 * i + 1 <= list.size()) && (list.get(2 * i + 1).compareTo(list.get(2 * i)) < 0)) {
+		} else if ((2 * i + 1 </*=*/ list.size()) && (list.get(2 * i + 1).compareTo(list.get(2 * i)) < 0)) {
 			j = 2 * i + 1;
 		} else {
 			j = 2 * i;
 		}
-
 		return j;
 	}
     
     public void insert(Event e) {
-        int n = eventList.size() + 1;
+        int n = eventList.size();// + 1;
         swim(e,n);
     }
     
     public void insert(Sim s) {
-        int n = simList.size() + 1;
+        int n = simList.size();// + 1;
         swim(s,n);
     }
 
