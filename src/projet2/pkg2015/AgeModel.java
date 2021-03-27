@@ -16,6 +16,8 @@
 package projet2.pkg2015;
 
 
+import Model.Event;
+import Model.PQ;
 import Model.Sim;
 import java.util.Arrays;
 import java.util.Random;
@@ -33,6 +35,8 @@ public class AgeModel
     private final double death_rate;
     private final double accident_rate;
     private final double age_factor;
+    public static double fidelite = 0.90;
+    public static double reproduction_rate = 2.0;
     
     private static final double DEFAULT_ACCIDENT_RATE = 0.01; // 1% chance of dying per year
     private static final double DEFAULT_DEATH_RATE = 12.5;
@@ -161,6 +165,27 @@ public class AgeModel
             return Sim.Sex.M;
         }
     }
+    
+    public Sim selectMate(Sim mother, PQ simlist, Event E){
+            Random RND = new Random(); // générateur de nombres pseudoaléatoires
+            Sim y = null; // choisir pere y
+            if (!mother.isInARelationship(E.getTime()) || RND.nextDouble() > AgeModel.fidelite) { // partenaire au hasard
+                do {
+                    Sim z = simlist.getSimList().get(RND.nextInt(simlist.getSimList().size())); // Fetch a random sim, with an int that is bound from [0 , list size] (indexation?)
+                    if (z.getSex() != mother.getSex() && z.isMatingAge(E.getTime())) // isMatingAge() vérifie si z est de l'age acceptable (Verifie deathtime aussi)
+                    {
+                        if (mother.isInARelationship(E.getTime()) // z accepte si x est infidèle
+                                || !z.isInARelationship(E.getTime())
+                                || RND.nextDouble() > AgeModel.fidelite) {
+                            y = z;
+                        }
+                    }
+                } while (y == null);
+            } else {
+                y = mother.getMate();
+            }
+            return y;
+        }
     
     /**
      * Test for tabulating random lifespans from command line.
