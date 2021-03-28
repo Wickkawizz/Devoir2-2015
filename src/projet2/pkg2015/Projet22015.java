@@ -18,6 +18,6 @@ public class Projet22015 {
      */
     public static void main(String[] args) {
         Simulator simulation = new Simulator();
-        simulation.simulate(10,100);
+        simulation.simulate(100,100);
     }
 }
