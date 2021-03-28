@@ -79,11 +79,13 @@ public class PQ{
 	    simList.add(i, v);
     }
     
-    public void sink(Event v, int i){ if(i <= 0)System.exit(-1);
+    public void sink(Event v, int i){ //if(i <= 0)System.exit(-99);
 	    int c = MinChildEvent(i, eventList);
 	    // -1 is returned if the sim in the list is lesser than the one given in argument
-
-	    while(c != 0 && eventList.get(c).compareTo(v) < 0){
+	    
+	    
+	    System.out.println(c);	    
+	    while(c != 0 && eventList.get(c) != null && eventList.get(c).compareTo(v) < 0){
 	        eventList.add(i, eventList.get(c)/*-1 ?? maybe the indexation will be bad*/);
 	        i = c;
 	        c = MinChildEvent(i, eventList);
@@ -109,15 +111,14 @@ public class PQ{
     
 	// issue is raised here*** --> (list.get(2 * i + 1) returns null for some reason
 	public int MinChildEvent(int i, ArrayList<Event> list) {
-
 		int j;
-		System.out.println("\n\n---------------------------------");
-		System.out.println("i : " + i);
-		System.out.println("2i : " + 2 * i);
-		System.out.println("list.size() : " + list.size());
-		System.out.println("2i + 1 </*=*/ list.size() : " + (2 * i + 1 </*=*/ list.size()));
+		//System.out.println("\n\n---------------------------------");
+		//System.out.println("i : " + i);
+		//System.out.println("2i : " + 2 * i);
+		//System.out.println("list.size() : " + list.size());
+		//System.out.println("2i + 1 </*=*/ list.size() : " + (2 * i + 1 </*=*/ list.size()));
 		//System.out.println("j : " + j);
-		System.out.println("---------------------------------");
+		//System.out.println("---------------------------------");
 		
 		/* "2 * i + 1 <= list.size()" retourne vrai mais list.get(2 * i + 1) retourne null??
 		 * ca fait pas de sens? */
@@ -128,8 +129,10 @@ public class PQ{
 		 * Va falloir tester plus en detail, mais je pense que l'algo du prof start sont array a '1' et non '0'
 		 * "Entrée: indice i > 0, taille n" (taken from pseudo-code)
 		 * */
-		if (2 * i + 1 </*=*/ list.size())
+		if (2 * i + 1 <= list.size()) {
 			System.out.println(list.size() - (2*i+1) + " (index)");
+			System.out.println("list.size() : " + list.size());
+		}
 		
 		if (2 * i > list.size()) {
 			j = 0;
@@ -139,22 +142,29 @@ public class PQ{
 			j = 2 * i;
 		}
 		
-		System.out.println("list.size() = " + list.size() + "\nj = " + j);
+		//System.out.println("list.size() = " + list.size() + "\nj = " + j);
 		return j;
 	}
     
     public void insert(Event e) {
+    	if(e == null)
+    		System.err.println("WTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAOEJFNOAEFAENF");
+    	
         int n = eventList.size();// + 1;
         swim(e,n);
     }
     
     public void insert(Sim s) {
+    	if(s == null)
+    		System.err.println("WTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAOEJFNOAEFAENF");
+    	
         int n = simList.size();// + 1;
         swim(s,n);
     }
 
-    public boolean isEmptyEvent(ArrayList<Event> list) {
-        return list.isEmpty();
+    public boolean isEmptyEvent() {
+    	System.out.println(eventList.isEmpty());
+        return eventList.isEmpty();
     }
     
     public boolean isEmptyList(ArrayList<Sim> list) {
@@ -165,10 +175,14 @@ public class PQ{
         int n = eventList.size();
         Event r = eventList.get(0);
         Event v = eventList.get(n - 1);
-        eventList.set(n - 1, null);
+        
+        eventList.subList(n - 1, n).clear();
+        //eventList.set(n - 1, null);
+        
+        
         n = n - 1;
-        if (n >= 0) {
-            sink(v,0);
+        if (n > -1) {
+            sink(v, 0);
         }
         return r;
     }
@@ -176,25 +190,30 @@ public class PQ{
     public Sim deleteMinSim() {
         int n = simList.size();
         Sim r = simList.get(0);
-        Sim v = simList.get(simList.size() - 1);
-        simList.set(simList.size() - 1, null);
+        Sim v = simList.get(n - 1);
+        
+        eventList.subList(n - 1, n).clear();
+        //simList.set(n - 1, null);
+        
         n = n - 1;
-        if (n > 0) {
-            sink(v,1);
+        if (n > -1) {
+            sink(v, 0);
         }
         return r;
     }
 
     public void removeSim(Sim sim) {
         simList.remove(sim);
-        int n = deadSimList.size() + 1;
+        int n = deadSimList.size();// + 1;
         double p = Math.floor(n/2);
         // 1 is returned if the sim in the list is greater than the one given in argument
         while (p !=0 && deadSimList.get((int) p).compareTo(sim) > 0){
             deadSimList.add(n, deadSimList.get((int) p)/*-1 ?? maybe the indexation will be bad*/);
             n = (int) p;
-            p = n/2 + ((n % 2 == 0) ? 0:1); // C'est le plafond de n/2: https://stackoverflow.com/questions/7139382/java-rounding-up-to-an-int-using-math-ceil
+            p = Math.floor(n/2);//n/2 + ((n % 2 == 0) ? 0:1); // C'est le plafond de n/2: https://stackoverflow.com/questions/7139382/java-rounding-up-to-an-int-using-math-ceil
             }
+        System.out.println(n);
+        
         deadSimList.add(n,sim);
     }
     

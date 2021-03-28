@@ -17,8 +17,9 @@ package projet2.pkg2015;
 
 
 import Model.Event;
-import Model.PQ;
 import Model.Sim;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -166,12 +167,12 @@ public class AgeModel
         }
     }
     
-    public Sim selectMate(Sim mother, PQ simlist, Event E){
+    public Sim selectMate(Sim mother, ArrayList<Sim>  simlist, Event E){
             Random RND = new Random(); // générateur de nombres pseudoaléatoires
             Sim y = null; // choisir pere y
             if (!mother.isInARelationship(E.getTime()) || RND.nextDouble() > AgeModel.fidelite) { // partenaire au hasard
                 do {
-                    Sim z = simlist.getSimList().get(RND.nextInt(simlist.getSimList().size())); // Fetch a random sim, with an int that is bound from [0 , list size] (indexation?)
+                    Sim z = simlist.get(RND.nextInt(simlist.size())); // Fetch a random sim, with an int that is bound from [0 , list size] (indexation?)
                     if (z.getSex() != mother.getSex() && z.isMatingAge(E.getTime())) // isMatingAge() vérifie si z est de l'age acceptable (Verifie deathtime aussi)
                     {
                         if (mother.isInARelationship(E.getTime()) // z accepte si x est infidèle

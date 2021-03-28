@@ -15,8 +15,6 @@
  */
 package Model;
 
-import java.util.Random;
-
 /**
  * @author Arkapin£
  * @author Mikl&oacute;s Cs&#369;r&ouml;s
