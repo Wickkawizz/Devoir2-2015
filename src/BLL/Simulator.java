@@ -54,7 +54,7 @@ public class Simulator {
 			Event E = eventQ.deleteMinEvent(); // prochain événement
 			if (E == null) {
 				nullCount++;
-				System.err.println("E is null?? Total null so far : " + nullCount);
+				System.out.println("E is null?? Total null so far : " + nullCount);
 			}
 			else if (E.getTime() > Tmax) {
 				System.out.println("E.getTime() : " + E.getTime());
@@ -62,7 +62,8 @@ public class Simulator {
 				break; // arrêter à Tmax
 			}
 			else if (E.getSubject().getDeathTime() > E.getTime()) {
-				time = E.getTime();// rough time update
+				if(E.getTime() > time)
+					time = E.getTime();// rough time update
 				Sim sim = E.getSubject();
 				EventType eventType = E.getEvent();
 				System.out.println("timefweogfwregunwrghj : " + E.getTime());
@@ -145,11 +146,11 @@ public class Simulator {
 	                    //r3
 	                    eventQ.insert(new Event(sim, (E.getTime() + AgeModel.randomWaitingTime(new Random(), AgeModel.reproduction_rate)),
 							Event.EventType.Accouplement));
-                    	System.err.println("reproduction");
+                    	System.out.println("reproduction");
 						break;
 					}
                     case Mort: //aka Deaderinoo Ripperoni
-                    	System.err.println("Dead");
+                    	System.out.println("Dead");
                     	eventQ.removeSim(E.getSubject());
                     	break;
 				} // else rien à faire avec E car son sujet est mort
