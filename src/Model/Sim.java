@@ -83,13 +83,13 @@ public class Sim implements Comparable<Sim>
      */
     public boolean isMatingAge(double time)
     {
-        if (time<getDeathTime())
+        if (time < getDeathTime())
         {
-            double age = time-getBirthTime();
+            double age = time - getBirthTime();
             return 
                     Sex.F.equals(getSex())
-                    ? age>=MIN_MATING_AGE_F && age <= MAX_MATING_AGE_F
-                    : age>=MIN_MATING_AGE_M && age <= MAX_MATING_AGE_M;
+                    ? age >= MIN_MATING_AGE_F && age <= MAX_MATING_AGE_F
+                    : age >= MIN_MATING_AGE_M && age <= MAX_MATING_AGE_M;
         } else
             return false; // no mating with dead people
     }

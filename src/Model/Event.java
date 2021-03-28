@@ -36,7 +36,7 @@ public class Event implements Comparable<Event>{
     }
     
     @Override
-    public int compareTo(Event o) { if(o == null) return 0;//dirty 'fix' for testing
+    public int compareTo(Event o) {
         return Double.compare(this.time, o.time);
     }
     

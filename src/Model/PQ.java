@@ -56,14 +56,16 @@ public class PQ{
     
     //Swim for the eventlist
     public void swim(Event v, int i){
-	    double p = Math.floor(i/2);
+	    int p = Math.floorDiv(i, 2);
+
 	    // 1 is returned if the sim in the list is greater than the one given in argument
-	    while (p !=0 && eventList.get((int) p).compareTo(v) > 0){
-	        eventList.add(i, eventList.get((int) p)/*-1 ?? maybe the indexation will be bad*/);
-	        i = (int) p;
-	        p = Math.floor(i/2);
-	        }
-	    eventList.add(i,v);
+	    while (p != 0 && eventList.get(p-1).compareTo(v) > 0){	    	
+	        eventList.add(i-1, eventList.get(p-1)/*-1 ?? maybe the indexation will be bad*/);
+	        //eventList.remove(i);
+	        i = p;
+	        p = Math.floorDiv(i, 2);
+        }
+	    eventList.add(i-1,v);
     }
     
     // https://ift2015h21.files.wordpress.com/2021/02/ift2015h21-06note-pq.pdf
@@ -79,21 +81,23 @@ public class PQ{
 	    simList.add(i, v);
     }
     
-    public void sink(Event v, int i){ //if(i <= 0)System.exit(-99);
+    public void sink(Event v, int i){
 	    int c = MinChildEvent(i, eventList);
 	    // -1 is returned if the sim in the list is lesser than the one given in argument
 	    
 	    
-	    System.out.println(c);	    
-	    while(c != 0 && eventList.get(c) != null && eventList.get(c).compareTo(v) < 0){
-	        eventList.add(i, eventList.get(c)/*-1 ?? maybe the indexation will be bad*/);
+	    while(c != 0 && eventList.get(c-1) != null && eventList.get(c-1).compareTo(v) < 0){
+	        eventList.add(i, eventList.get(c-1)/*-1 ?? maybe the indexation will be bad*/);
 	        i = c;
 	        c = MinChildEvent(i, eventList);
 
 		    System.out.println("\n---\nc : " + c + "\n---");
 		    System.out.println("\n---\neventList.size() : " + eventList.size() + "\n---");
-	        }
-	    eventList.add(i, v);
+		    if(c == eventList.size()) {
+		    	System.out.println("fuck");
+		    }
+        }
+	    eventList.add(i-1, v);
     }
     
 	public int MinChildSim(int i, ArrayList<Sim> list) {
@@ -113,12 +117,12 @@ public class PQ{
 	public int MinChildEvent(int i, ArrayList<Event> list) {
 		int j;
 		//System.out.println("\n\n---------------------------------");
-		//System.out.println("i : " + i);
-		//System.out.println("2i : " + 2 * i);
-		//System.out.println("list.size() : " + list.size());
-		//System.out.println("2i + 1 </*=*/ list.size() : " + (2 * i + 1 </*=*/ list.size()));
+		System.out.println("i : " + i);
+		System.out.println("2i : " + 2 * i);
+		System.out.println("list.size() : " + list.size());
+		System.out.println("2i + 1 </*=*/ list.size() : " + (2 * i + 1 </*=*/ list.size()));
 		//System.out.println("j : " + j);
-		//System.out.println("---------------------------------");
+		System.out.println("---------------------------------");
 		
 		/* "2 * i + 1 <= list.size()" retourne vrai mais list.get(2 * i + 1) retourne null??
 		 * ca fait pas de sens? */
@@ -126,38 +130,30 @@ public class PQ{
 		
 		/*
 		 * **Avec le '<=' qui devient un '<' la condition fonctionne comme voulue je pense**
-		 * Va falloir tester plus en detail, mais je pense que l'algo du prof start sont array a '1' et non '0'
+		 * Va falloir tester plus en detail, mais je pense que l'algo du prof start son array a '1' et non '0'
 		 * "Entrée: indice i > 0, taille n" (taken from pseudo-code)
 		 * */
-		if (2 * i + 1 <= list.size()) {
+		/*if (2 * i + 1 <= list.size()) {
 			System.out.println(list.size() - (2*i+1) + " (index)");
 			System.out.println("list.size() : " + list.size());
-		}
+		}*/
 		
 		if (2 * i > list.size()) {
 			j = 0;
-		} else if ((2 * i + 1 </*=*/ list.size()) && (list.get(2 * i + 1).compareTo(list.get(2 * i)) < 0)) {
+		} else if ((2 * i + 1 <= list.size()) && (list.get(2 * i + 1-1).compareTo(list.get(2 * i-1)) < 0)) {
 			j = 2 * i + 1;
 		} else {
 			j = 2 * i;
 		}
-		
-		//System.out.println("list.size() = " + list.size() + "\nj = " + j);
 		return j;
 	}
     
     public void insert(Event e) {
-    	if(e == null)
-    		System.err.println("WTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAOEJFNOAEFAENF");
-    	
-        int n = eventList.size();// + 1;
+        int n = eventList.size() + 1;
         swim(e,n);
     }
     
     public void insert(Sim s) {
-    	if(s == null)
-    		System.err.println("WTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAOEJFNOAEFAENF");
-    	
         int n = simList.size();// + 1;
         swim(s,n);
     }
@@ -172,27 +168,31 @@ public class PQ{
     }
 
     public Event deleteMinEvent() {
-        int n = eventList.size();
-        Event r = eventList.get(0);
-        Event v = eventList.get(n - 1);
+        int n = eventList.size() - 1; //-1 --> because array start at 0, not 1
         
-        eventList.subList(n - 1, n).clear();
+        Event r = eventList.get(0);
+        Event v = eventList.get(n);
+        
+        // n + 1 to get actual size
+        eventList.subList(n, n + 1).clear();
         //eventList.set(n - 1, null);
         
         
-        n = n - 1;
-        if (n > -1) {
-            sink(v, 0);
+        //n = n - 1;
+        if (n > 0) {
+            sink(v, 1);
         }
         return r;
     }
     
     public Sim deleteMinSim() {
-        int n = simList.size();
-        Sim r = simList.get(0);
-        Sim v = simList.get(n - 1);
+        int n = simList.size() - 1; //-1 --> because array start at 0, not 1
         
-        eventList.subList(n - 1, n).clear();
+        Sim r = simList.get(0);
+        Sim v = simList.get(n);
+        
+        // n + 1 to get actual size
+        eventList.subList(n, n + 1).clear();
         //simList.set(n - 1, null);
         
         n = n - 1;

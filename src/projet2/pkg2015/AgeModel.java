@@ -155,6 +155,7 @@ public class AgeModel
         double u = RND.nextDouble();
         double age_death = death_rate*Math.log1p(-Math.log(u)/death_rate*age_factor);
         
+        //System.out.println(Math.min(age_death, accidental_death));
         return Math.min(age_death, accidental_death);
     }
     
@@ -194,6 +195,7 @@ public class AgeModel
      * @param args accident-rate death-rate [scale]
      */
     //No idea why there's a main here. It says it's for testing from the cmd.
+    /*
     public static void main(String[] args)
     {
         int arg_idx = 0;
@@ -231,5 +233,6 @@ public class AgeModel
         double stable_rate = 2.0/span;
         System.out.println("avg\t"+avg+"\tmating span(mother): "+span+"\tstable "+stable_rate+"\t// 1/"+span/2.0);
     }
+    */
     
 }
