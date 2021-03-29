@@ -139,12 +139,12 @@ public class PQ{
 	    
 	    //eventList.set(i, v)
 	    //assert(n < eventList.size());
-	    int c = 2*i; // indice de l’enfant gauche
-	    System.out.println("___________");
+	    //int c = 2*i; // indice de l’enfant gauche
+	    /*System.out.println("___________");
 	    System.out.println(c);
 	    System.out.println(MinChildEvent(i, eventList));
-	    System.out.println("___________");
-	    c = MinChildEvent(i, eventList);
+	    System.out.println("___________");*/
+	    int c = MinChildEvent(i, eventList);
 	    int n = eventList.size() -1;
 	    while(c <= n && c >= 1) {
 	    	var e = eventList.get(c -1);
@@ -224,11 +224,11 @@ public class PQ{
 
     public Event deleteMinEvent() {
 
-		System.out.println("_____________________________________________________");
+		/*System.out.println("_____________________________________________________");
     	for (var event : eventList) {
 			System.out.println(event.getTime());
 		}
-		System.out.println("_____________________________________________________");
+		System.out.println("_____________________________________________________");*/
     	
         int n = eventList.size() - 1; //-1 --> because array start at 0, not 1
         

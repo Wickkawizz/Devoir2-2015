@@ -55,7 +55,7 @@ public class Simulator {
 		while (!eventQ.isEmptyEvent()) {
 			//output(eventQ, simQ);
 			Event E = eventQ.deleteMinEvent(); // prochain événement
-			System.out.println(eventQ.getEventList().size());
+			System.out.println("nombre d'event restant : " + eventQ.getEventList().size());
 			if (E == null) {
 				nullCount++;
 				System.out.println("E is null?? Total null so far : " + nullCount);
@@ -90,10 +90,10 @@ public class Simulator {
 	                    // Set death time
 						sim.setDeathTime(E.getTime() + ageModel.randomAge(new Random()));
 						
-						System.out.println("____________________________________________________________");
+						/*System.out.println("____________________________________________________________");
 						System.out.println("Current time : " + time);
 						System.out.println("DeathTime : " + (E.getTime() + ageModel.randomAge(new Random())));
-						System.out.println("____________________________________________________________");
+						System.out.println("____________________________________________________________");*/
 						
 	                                        
 						// On enfile l'evenement de mort dans la timeline
@@ -128,10 +128,10 @@ public class Simulator {
 						//r3
 						eventQ.insert(new Event(sim, (E.getTime() + AgeModel.randomWaitingTime(new Random(), AgeModel.reproduction_rate)),
 								Event.EventType.Accouplement));
-						System.out.println("reproduction");
+						//System.out.println("reproduction");
 						break;
 	                case Mort: //aka Deaderinoo Ripperoni
-	                	System.out.println("Dead");
+	                	//System.out.println("Dead");
 	                	eventQ.removeSim(E.getSubject());
 	                	break;
 				} // else rien à faire avec E car son sujet est mort
