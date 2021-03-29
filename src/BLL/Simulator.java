@@ -137,8 +137,10 @@ public class Simulator {
 				} // else rien à faire avec E car son sujet est mort
 			}
 			else {
-				if(E.getEvent() != Event.EventType.Accouplement)
-					System.out.println("devrait pas etre ici ._.");
+				if(E.getEvent() == Event.EventType.Naissance)
+					System.out.println("Bébé null...");
+				else if(E.getEvent() == Event.EventType.Mort)
+						System.out.println("devrait pas etre ici ._.");
 			}
 			old_events.add(E);
 			if(eventQ.isEmptyEvent()) {
@@ -166,7 +168,7 @@ public class Simulator {
 		
 		//somehow les events sont pas trier en ordre de temps???
 		System.out.println("\n*********************************\nOLD_EVENTS : ");
-		for (var event : old_events) {
+		for (Event event : old_events) {
 			System.out.println(event.getTime());
 		}
 		System.out.println("end_OLD_EVENTS\n*********************************\n");
