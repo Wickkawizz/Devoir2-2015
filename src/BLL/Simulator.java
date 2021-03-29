@@ -139,8 +139,10 @@ public class Simulator {
 				} // else rien à faire avec E car son sujet est mort
 			}
 			else {
-				if(E.getEvent() != Event.EventType.Accouplement)
-					System.out.println("devrait pas etre ici ._.");
+				if(E.getEvent() == Event.EventType.Naissance)
+					System.out.println("Bébé null...");
+				else if(E.getEvent() == Event.EventType.Mort)
+						System.out.println("devrait pas etre ici ._.");
 			}
 			old_events.add(E);
 			if(eventQ.isEmptyEvent()) {
@@ -190,6 +192,7 @@ public class Simulator {
         
         for (int i = allMales.size(); i > 0; i--) {
             Sim sim = allMales.remove(i);
+            i = allMales.size();
             if (potential.contains(sim)) {
                 coalescence.putIfAbsent(sim.getSim_ident(), sim);
                 if (!listOfIndexes.contains(sim.getSim_ident())) {
