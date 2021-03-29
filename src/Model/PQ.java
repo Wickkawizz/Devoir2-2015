@@ -6,6 +6,7 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * @author Arkapin£
@@ -86,6 +87,17 @@ public class PQ{
 	    	p = i >> 1; //décalage >> par 1 = div par 2
 	    }
 	    eventList.add(i -1, v);
+	    
+	    /*
+	     * Nous avons tous essayer mais c'est la seule facon que l'on a trouvé pour correctement classer les event (par temps)
+	     * */
+	    eventList.sort(new Comparator<Event>() {
+	    	@Override
+			public int compare(Event o1, Event o2) {
+				return o1.compareTo(o2);
+			}
+	    	
+		});
     }
     
     // https://ift2015h21.files.wordpress.com/2021/02/ift2015h21-06note-pq.pdf
@@ -128,8 +140,13 @@ public class PQ{
 	    //eventList.set(i, v)
 	    //assert(n < eventList.size());
 	    int c = 2*i; // indice de l’enfant gauche
+	    System.out.println("___________");
+	    System.out.println(c);
+	    System.out.println(MinChildEvent(i, eventList));
+	    System.out.println("___________");
+	    c = MinChildEvent(i, eventList);
 	    int n = eventList.size() -1;
-	    while(c <= n) {
+	    while(c <= n && c >= 1) {
 	    	var e = eventList.get(c -1);
 	    	if(c < n) {
 	    		var e2 = eventList.get(c + 1 -1);
@@ -144,7 +161,18 @@ public class PQ{
 	    	i = c;
 	    	c = i << 1; // décalage gauche = mul par 2
 	    }
-	    eventList.set(i -1, v);	    
+	    eventList.set(i -1, v);
+	    
+	    /*
+	     * Nous avons tous essayer mais c'est la seule facon que l'on a trouvé pour correctement classer les event (par temps)
+	     * */
+	    eventList.sort(new Comparator<Event>() {
+	    	@Override
+			public int compare(Event o1, Event o2) {
+				return o1.compareTo(o2);
+			}
+	    	
+		});
     }
     
 	public int MinChildSim(int i, ArrayList<Sim> list) {
@@ -162,15 +190,15 @@ public class PQ{
     
 	// issue is raised here*** --> (list.get(2 * i + 1) returns null for some reason
 	public int MinChildEvent(int i, ArrayList<Event> list) {
-		int j;
+		int j = 0;
 		
-		if (2 * i > list.size() - 1) {
-			j = 0;
-		} else if ((2 * i + 1-1 <= list.size() - 1) && list.get(2 * i + 1-1).getTime() < list.get(2 * i -1).getTime()){//(list.get(2 * i + 1-1).compareTo(list.get(2 * i-1)) < 0)) {
-			j = 2 * i + 1;
-		} else {
+		if (2 * i <= list.size() - 1) {
 			j = 2 * i;
-		}
+		} else if ((2 * i + 1 <= list.size() - 1) && list.get(2 * i + 1-1).getTime() < list.get(2 * i -1).getTime()){//(list.get(2 * i + 1-1).compareTo(list.get(2 * i-1)) < 0)) {
+			j = 2 * i + 1;
+		} /*else {
+			j = 2 * i;
+		}*/
 		return j;
 	}
     

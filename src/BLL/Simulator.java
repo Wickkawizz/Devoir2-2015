@@ -4,7 +4,7 @@ import Model.Event;
 import Model.PQ;
 import Model.Sim;
 
-//import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.Random;
 import projet2.pkg2015.AgeModel;
 
@@ -17,6 +17,7 @@ public class Simulator {
 	// private ArrayList<Sim> arrayList;
 	Double time = 0.00;
 	AgeModel ageModel;
+	ArrayList<Event> old_events = new ArrayList<Event>();
 	int nullCount = 0;
 
 	public Simulator() {
@@ -45,9 +46,12 @@ public class Simulator {
 			// On enfile l'evenement de mort dans la timeline
 			eventQ.insert(new Event(fondateur, time + fondateur.getDeathTime(), Event.EventType.Mort));
 
-			eventQ.insert(fondateur);
+			//eventQ.insert(fondateur);
 			simQ.insert(fondateur);
 		}
+		System.out.println("Time : " + time);
+		System.out.println("pause");
+		
 		while (!eventQ.isEmptyEvent()) {
 			//output(eventQ, simQ);
 			Event E = eventQ.deleteMinEvent(); // prochain événement
@@ -55,21 +59,24 @@ public class Simulator {
 			if (E == null) {
 				nullCount++;
 				System.out.println("E is null?? Total null so far : " + nullCount);
+				break;
 			}
 			else if (E.getTime() > Tmax) {
 				System.out.println("E.getTime() : " + E.getTime());
 				System.out.println("Tmax!");
 				break; // arrêter à Tmax
 			}
-			else if (E.getSubject().getDeathTime() > E.getTime()) {
+			else if(E.getTime() < time) {
+				System.out.println("event is too old");
+			}
+			else if (E.getSubject() != null && E.getSubject().getDeathTime() >= E.getTime()) {
 				
 				/******************************************/
 				if(E.getTime() >= time)
 					time = E.getTime();// rough time update
-				else {
+				else 
 					for(int i = 0; i < 10; i++)
-						System.out.println("wtf");
-				}
+						System.out.println("devrait pas etre ici...");
 				/******************************************/
 				
 				
@@ -82,6 +89,12 @@ public class Simulator {
 	                    //n1
 	                    // Set death time
 						sim.setDeathTime(E.getTime() + ageModel.randomAge(new Random()));
+						
+						System.out.println("____________________________________________________________");
+						System.out.println("Current time : " + time);
+						System.out.println("DeathTime : " + (E.getTime() + ageModel.randomAge(new Random())));
+						System.out.println("____________________________________________________________");
+						
 	                                        
 						// On enfile l'evenement de mort dans la timeline
 						eventQ.insert(new Event(sim, sim.getDeathTime(), Event.EventType.Mort));
@@ -111,26 +124,35 @@ public class Simulator {
 		                    Sim baby = new Sim(sim, mate, E.getTime() + 0.75 /*9 mois plus tard*/, ageModel.getRandomSex());
 		                    Event birth = new Event(baby, sim /*mom*/, mate /*dad*/, baby.getBirthTime(), Event.EventType.Naissance);
 		                    eventQ.insert(birth);
-		                    //r3
-		                    eventQ.insert(new Event(sim, (E.getTime() + AgeModel.randomWaitingTime(new Random(), AgeModel.reproduction_rate)),
-								Event.EventType.Accouplement));
-	                    	System.out.println("reproduction");
-							break;
 						}
+						//r3
+						eventQ.insert(new Event(sim, (E.getTime() + AgeModel.randomWaitingTime(new Random(), AgeModel.reproduction_rate)),
+								Event.EventType.Accouplement));
+						System.out.println("reproduction");
+						break;
 	                case Mort: //aka Deaderinoo Ripperoni
 	                	System.out.println("Dead");
 	                	eventQ.removeSim(E.getSubject());
 	                	break;
 				} // else rien à faire avec E car son sujet est mort
 			}
+			else {
+				if(E.getEvent() != Event.EventType.Accouplement)
+					System.out.println("devrait pas etre ici ._.");
+			}
+			old_events.add(E);
+			if(eventQ.isEmptyEvent()) {
+				System.out.println("NO MORE EVENTS. SIMULATION COMPLETED");
+				System.out.println("TIME TO T_MAX : " + (Tmax - time));
+			}
 		}
 		//System.out.println("done");
-		output(eventQ, simQ);
+		output(eventQ, simQ, Tmax);
 		
 	}
 	
-	private void output(PQ eventQ, PQ simQ) {
-		System.out.println("+++++++++++++++++++++++++++++++\nsimQ :");
+	private void output(PQ eventQ, PQ simQ, double Tmax) {
+		/*System.out.println("+++++++++++++++++++++++++++++++\nsimQ :");
 		for (var sim : simQ.getSimList()) {
 			System.out.println(sim.getDeathTime());
 		}
@@ -140,7 +162,15 @@ public class Simulator {
 			System.out.println(sim.getDeathTime());
 		}
 		System.out.println("eventQ end\n*********************************\n");
-		System.out.println("simQ.getSimList().size() - eventQ.getSimList().size() : " + (simQ.getSimList().size() - eventQ.getSimList().size()));
-		System.out.println("TimeTimeTimeTimeTimeTimeTimeTimeTime :\n" + time + "\nTimeTimeTimeTimeTimeTimeTimeTimeTime");
+		System.out.println("simQ.getSimList().size() - eventQ.getSimList().size() : " + (simQ.getSimList().size() - eventQ.getSimList().size()));*/
+		
+		//somehow les events sont pas trier en ordre de temps???
+		System.out.println("\n*********************************\nOLD_EVENTS : ");
+		for (var event : old_events) {
+			System.out.println(event.getTime());
+		}
+		System.out.println("end_OLD_EVENTS\n*********************************\n");
+		System.out.println("Max time seen :\n" + time + "\n");
+		System.out.println("Tmax :\n" + Tmax + "\n");
 	}
 }

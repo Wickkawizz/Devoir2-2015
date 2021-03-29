@@ -20,7 +20,7 @@ import Model.Event;
 import Model.Sim;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.Random;
 
 /**
