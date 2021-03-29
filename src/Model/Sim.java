@@ -143,6 +143,11 @@ public class Sim implements Comparable<Sim>
     {
         return mother;
     }
+
+    public String getSim_ident() {
+        return String.valueOf(sim_ident);
+    }
+    
     
     /**
      * 
