@@ -56,16 +56,36 @@ public class PQ{
     
     //Swim for the eventlist
     public void swim(Event v, int i){
-	    int p = Math.floorDiv(i, 2);
+	    /*int p = Math.floorDiv(i, 2);
+	    // Divide x by n rounding up
+	    //int p = (i+2-1)/2;
 
 	    // 1 is returned if the sim in the list is greater than the one given in argument
-	    while (p != 0 && eventList.get(p-1).compareTo(v) > 0){	    	
-	        eventList.add(i-1, eventList.get(p-1)/*-1 ?? maybe the indexation will be bad*/);
+	    while (p != 0 && eventList.get(p -1).getTime() > v.getTime()) {// eventList.get(p-1).compareTo(v) > 0){	    	
+	        eventList.add(i-1, eventList.get(p-1)/*-1 ?? maybe the indexation will be bad*//*);
+	        eventList.remove(eventList.get(p -1));
 	        //eventList.remove(i);
 	        i = p;
 	        p = Math.floorDiv(i, 2);
+	        //p = (i+2-1)/2;
         }
-	    eventList.add(i-1,v);
+	    eventList.add(i -1, v);*/
+	    
+	    
+	    
+	    //
+	    int p = i/2;//auto rounding
+	    while(p > 0) {
+	    	Event e = eventList.get(p -1);
+	    	if(e.compareTo(v) <= 0) break;
+	    	if(i-1 == eventList.size()) break;
+	    	eventList.set(i -1, e);
+	    	//eventList.add(i -1, e);
+	    	//eventList.remove(eventList.get(p -1));
+	    	i = p;
+	    	p = i >> 1; //décalage >> par 1 = div par 2
+	    }
+	    eventList.add(i -1, v);
     }
     
     // https://ift2015h21.files.wordpress.com/2021/02/ift2015h21-06note-pq.pdf
@@ -74,20 +94,22 @@ public class PQ{
 	    int c = MinChildSim(i, simList);
 	    // -1 is returned if the sim in the list is lesser than the one given in argument
 	    while(c != 0 && simList.get(c).compareTo(v) < 0){
-	        simList.add(i, simList.get(c)/*-1 ?? maybe the indexation will be bad*/);
+	        simList.add(i -1 , simList.get(c)/*-1 ?? maybe the indexation will be bad*/);
 	        i = c;
 	        c = MinChildSim(i, simList);
 	        }
-	    simList.add(i, v);
+	    simList.add(i -1, v);
     }
     
     public void sink(Event v, int i){
-	    int c = MinChildEvent(i, eventList);
+	    /*int c = MinChildEvent(i, eventList);
 	    // -1 is returned if the sim in the list is lesser than the one given in argument
 	    
 	    
 	    while(c != 0 && eventList.get(c-1) != null && eventList.get(c-1).compareTo(v) < 0){
-	        eventList.add(i, eventList.get(c-1)/*-1 ?? maybe the indexation will be bad*/);
+	        //eventList.add(i-1, eventList.get(c-1)/*-1 ?? maybe the indexation will be bad*//*);
+	        //eventList.subList(i, eventList.size()).remove(eventList.get(c - 1));
+	    	eventList.set(i -1, eventList.get(c-1));
 	        i = c;
 	        c = MinChildEvent(i, eventList);
 
@@ -98,6 +120,31 @@ public class PQ{
 		    }
         }
 	    eventList.add(i-1, v);
+	    */
+	    
+	    
+	    
+	    
+	    //eventList.set(i, v)
+	    //assert(n < eventList.size());
+	    int c = 2*i; // indice de l’enfant gauche
+	    int n = eventList.size() -1;
+	    while(c <= n) {
+	    	var e = eventList.get(c -1);
+	    	if(c < n) {
+	    		var e2 = eventList.get(c + 1 -1);
+	    		if(e2.compareTo(e) < 0) {
+	    			c++;
+	    			e = e2;
+	    		}
+	    	}
+	    	if(e.compareTo(v) >= 0) break;
+	    	
+	    	eventList.set(i -1, e);
+	    	i = c;
+	    	c = i << 1; // décalage gauche = mul par 2
+	    }
+	    eventList.set(i -1, v);	    
     }
     
 	public int MinChildSim(int i, ArrayList<Sim> list) {
@@ -116,31 +163,10 @@ public class PQ{
 	// issue is raised here*** --> (list.get(2 * i + 1) returns null for some reason
 	public int MinChildEvent(int i, ArrayList<Event> list) {
 		int j;
-		//System.out.println("\n\n---------------------------------");
-		System.out.println("i : " + i);
-		System.out.println("2i : " + 2 * i);
-		System.out.println("list.size() : " + list.size());
-		System.out.println("2i + 1 </*=*/ list.size() : " + (2 * i + 1 </*=*/ list.size()));
-		//System.out.println("j : " + j);
-		System.out.println("---------------------------------");
 		
-		/* "2 * i + 1 <= list.size()" retourne vrai mais list.get(2 * i + 1) retourne null??
-		 * ca fait pas de sens? */
-		
-		
-		/*
-		 * **Avec le '<=' qui devient un '<' la condition fonctionne comme voulue je pense**
-		 * Va falloir tester plus en detail, mais je pense que l'algo du prof start son array a '1' et non '0'
-		 * "Entrée: indice i > 0, taille n" (taken from pseudo-code)
-		 * */
-		/*if (2 * i + 1 <= list.size()) {
-			System.out.println(list.size() - (2*i+1) + " (index)");
-			System.out.println("list.size() : " + list.size());
-		}*/
-		
-		if (2 * i > list.size()) {
+		if (2 * i > list.size() - 1) {
 			j = 0;
-		} else if ((2 * i + 1 <= list.size()) && (list.get(2 * i + 1-1).compareTo(list.get(2 * i-1)) < 0)) {
+		} else if ((2 * i + 1-1 <= list.size() - 1) && list.get(2 * i + 1-1).getTime() < list.get(2 * i -1).getTime()){//(list.get(2 * i + 1-1).compareTo(list.get(2 * i-1)) < 0)) {
 			j = 2 * i + 1;
 		} else {
 			j = 2 * i;
@@ -149,17 +175,18 @@ public class PQ{
 	}
     
     public void insert(Event e) {
-        int n = eventList.size() + 1;
-        swim(e,n);
+        int n = eventList.size();// - 1;// + 1;
+        n = n + 1;
+        swim(e, n);
     }
     
     public void insert(Sim s) {
-        int n = simList.size();// + 1;
-        swim(s,n);
+        int n = simList.size() - 1;// + 1;
+        n = n + 1;
+        swim(s, n);
     }
 
     public boolean isEmptyEvent() {
-    	System.out.println(eventList.isEmpty());
         return eventList.isEmpty();
     }
     
@@ -168,6 +195,13 @@ public class PQ{
     }
 
     public Event deleteMinEvent() {
+
+		System.out.println("_____________________________________________________");
+    	for (var event : eventList) {
+			System.out.println(event.getTime());
+		}
+		System.out.println("_____________________________________________________");
+    	
         int n = eventList.size() - 1; //-1 --> because array start at 0, not 1
         
         Event r = eventList.get(0);
@@ -178,7 +212,7 @@ public class PQ{
         //eventList.set(n - 1, null);
         
         
-        //n = n - 1;
+        n = n - 1; // -1 parcequ on vient d enlever le dernier element
         if (n > 0) {
             sink(v, 1);
         }

@@ -51,6 +51,7 @@ public class Simulator {
 		while (!eventQ.isEmptyEvent()) {
 			//output(eventQ, simQ);
 			Event E = eventQ.deleteMinEvent(); // prochain événement
+			System.out.println(eventQ.getEventList().size());
 			if (E == null) {
 				nullCount++;
 				System.out.println("E is null?? Total null so far : " + nullCount);
@@ -63,7 +64,7 @@ public class Simulator {
 			else if (E.getSubject().getDeathTime() > E.getTime()) {
 				
 				/******************************************/
-				if(E.getTime() > time)
+				if(E.getTime() >= time)
 					time = E.getTime();// rough time update
 				else {
 					for(int i = 0; i < 10; i++)
