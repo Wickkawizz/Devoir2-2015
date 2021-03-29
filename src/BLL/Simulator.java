@@ -5,6 +5,8 @@ import Model.PQ;
 import Model.Sim;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import projet2.pkg2015.AgeModel;
 
@@ -148,6 +150,7 @@ public class Simulator {
 		}
 		//System.out.println("done");
 		output(eventQ, simQ, Tmax);
+                coalescence(simQ.getSimList());
 		
 	}
 	
@@ -166,11 +169,41 @@ public class Simulator {
 		
 		//somehow les events sont pas trier en ordre de temps???
 		System.out.println("\n*********************************\nOLD_EVENTS : ");
-		for (var event : old_events) {
+		for (Event event : old_events) {
 			System.out.println(event.getTime());
 		}
 		System.out.println("end_OLD_EVENTS\n*********************************\n");
 		System.out.println("Max time seen :\n" + time + "\n");
 		System.out.println("Tmax :\n" + Tmax + "\n");
 	}
+
+    public void coalescence(ArrayList<Sim> simQ) {
+        Map<String, Sim> coalescence = new HashMap();
+        ArrayList<Sim> allMales = simQ;
+        for (int i = 0; i < allMales.size(); i++) {
+            if (allMales.get(i).getSex() == Sim.Sex.F) {
+                allMales.remove(i);
+            }
+        }
+        ArrayList<Sim> potential = new ArrayList<>();
+        ArrayList<String> listOfIndexes = new ArrayList<>();
+        
+        for (int i = allMales.size(); i > 0; i--) {
+            Sim sim = allMales.remove(i);
+            if (potential.contains(sim)) {
+                coalescence.putIfAbsent(sim.getSim_ident(), sim);
+                if (!listOfIndexes.contains(sim.getSim_ident())) {
+                    listOfIndexes.add(sim.getSim_ident());
+                }
+
+            }else {
+            potential.add(sim);
+            }
+        }
+        System.out.println("COALESCENCE OF ALL FATHERS");
+        for (int i = 0; i < coalescence.size(); i++) {
+            System.out.println(coalescence.get(listOfIndexes.get(i)));
+        }
+        
+    }
 }

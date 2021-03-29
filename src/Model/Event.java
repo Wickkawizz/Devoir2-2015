@@ -80,5 +80,10 @@ public class Event implements Comparable<Event>{
         this.event = event;
     }
 
+    @Override
+    public String toString() {
+        return "Event{" + "subject=" + subject + ", mom=" + mom + ", dad=" + dad + ", time=" + time + ", event=" + event + '}';
+    }
+
     
 }

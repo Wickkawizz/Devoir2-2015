@@ -147,9 +147,9 @@ public class PQ{
 	    int c = MinChildEvent(i, eventList);
 	    int n = eventList.size() -1;
 	    while(c <= n && c >= 1) {
-	    	var e = eventList.get(c -1);
+	    	Event e = eventList.get(c -1);
 	    	if(c < n) {
-	    		var e2 = eventList.get(c + 1 -1);
+	    		Event e2 = eventList.get(c + 1 -1);
 	    		if(e2.compareTo(e) < 0) {
 	    			c++;
 	    			e = e2;
