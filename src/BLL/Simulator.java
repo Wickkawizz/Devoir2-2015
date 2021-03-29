@@ -76,9 +76,6 @@ public class Simulator {
 				/******************************************/
 				if(E.getTime() >= time)
 					time = E.getTime();// rough time update
-				else 
-					for(int i = 0; i < 10; i++)
-						System.out.println("devrait pas etre ici...");
 				/******************************************/
 				
 				
@@ -86,16 +83,9 @@ public class Simulator {
 
 				switch (E.getEvent()) {
 					case Naissance:
-						//sim = new Sim(E.getMom(), E.getDad(), E.getTime(), ageModel.getRandomSex()); //Deja créé dans l'accouplement
-	                                        
 	                    //n1
 	                    // Set death time
 						sim.setDeathTime(E.getTime() + ageModel.randomAge(new Random()));
-						
-						/*System.out.println("____________________________________________________________");
-						System.out.println("Current time : " + time);
-						System.out.println("DeathTime : " + (E.getTime() + ageModel.randomAge(new Random())));
-						System.out.println("____________________________________________________________");*/
 						
 	                                        
 						// On enfile l'evenement de mort dans la timeline
@@ -105,18 +95,12 @@ public class Simulator {
 						if (sim.getSex() == Sim.Sex.F) {
 							eventQ.insert(new Event(sim, (E.getTime() + AgeModel.randomWaitingTime(new Random(), AgeModel.reproduction_rate)), Event.EventType.Accouplement));
 						}
-	                                        
-                        //n3
-						//eventQ.getSimList().add(E.getSubject());
+
 						eventQ.insert(sim);
 						simQ.insert(sim);
 						break;
 					
-					case Accouplement://aka reproduction
-						//r1
-						//if(sim.getDeathTime() < E.getTime()) break;// deja morte, pas de reproduction
-						
-						//r2
+					case Accouplement:
 						if (sim.isMatingAge(E.getTime())) {
 	                                            
 		                    Sim mate = ageModel.selectMate(sim, eventQ.getSimList(), E);
@@ -124,19 +108,17 @@ public class Simulator {
 		                    mate.setMate(sim);
 		                    // Create baby
 		                    Sim baby = new Sim(sim, mate, E.getTime() + 0.75 /*9 mois plus tard*/, ageModel.getRandomSex());
-		                    Event birth = new Event(baby, sim /*mom*/, mate /*dad*/, baby.getBirthTime(), Event.EventType.Naissance);
+		                    Event birth = new Event(baby, sim, mate, baby.getBirthTime(), Event.EventType.Naissance);
 		                    eventQ.insert(birth);
 						}
 						//r3
 						eventQ.insert(new Event(sim, (E.getTime() + AgeModel.randomWaitingTime(new Random(), AgeModel.reproduction_rate)),
 								Event.EventType.Accouplement));
-						//System.out.println("reproduction");
 						break;
-	                case Mort: //aka Deaderinoo Ripperoni
-	                	//System.out.println("Dead");
+	                case Mort:
 	                	eventQ.removeSim(E.getSubject());
 	                	break;
-				} // else rien à faire avec E car son sujet est mort
+				}
 			}
 			else {
 				if(E.getEvent() == Event.EventType.Naissance)
@@ -157,19 +139,6 @@ public class Simulator {
 	}
 	
 	private void output(PQ eventQ, PQ simQ, double Tmax) {
-		/*System.out.println("+++++++++++++++++++++++++++++++\nsimQ :");
-		for (var sim : simQ.getSimList()) {
-			System.out.println(sim.getDeathTime());
-		}
-		System.out.println("simQ end\n*********************************\n");
-		System.out.println("+++++++++++++++++++++++++++++++\neventQ :");
-		for (var sim : eventQ.getSimList()) {
-			System.out.println(sim.getDeathTime());
-		}
-		System.out.println("eventQ end\n*********************************\n");
-		System.out.println("simQ.getSimList().size() - eventQ.getSimList().size() : " + (simQ.getSimList().size() - eventQ.getSimList().size()));*/
-		
-		//somehow les events sont pas trier en ordre de temps???
 		System.out.println("\n*********************************\nOLD_EVENTS : ");
 		for (Event event : old_events) {
 			System.out.println(event.getTime());
@@ -180,7 +149,7 @@ public class Simulator {
 	}
 
     public void coalescence(ArrayList<Sim> simQ) {
-        Map<String, Sim> coalescence = new HashMap();
+        Map<String, Sim> coalescence = new HashMap<String, Sim>();
         ArrayList<Sim> allMales = simQ;
         for (int i = 0; i < allMales.size(); i++) {
             if (allMales.get(i).getSex() == Sim.Sex.F) {
@@ -191,7 +160,7 @@ public class Simulator {
         ArrayList<String> listOfIndexes = new ArrayList<>();
         
         for (int i = allMales.size(); i > 0; i--) {
-            Sim sim = allMales.remove(i);
+            Sim sim = allMales.remove(i-1);
             i = allMales.size();
             if (potential.contains(sim)) {
                 coalescence.putIfAbsent(sim.getSim_ident(), sim);
